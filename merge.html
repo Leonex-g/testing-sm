@@ -6,6 +6,8 @@
 <title>Spicy Masti</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Nunito:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
 <!-- EmailJS -->
+<!-- Google Sign-In -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>emailjs.init("TKRMeew9fvQrl0Z44-BhJ");</script>
 <style>
@@ -286,6 +288,69 @@ footer{text-align:center;padding:24px 20px;background:#1a1a1a;color:#555;font-si
 [data-theme="dark"] footer{background:#0d0d10;}
 footer strong{color:#888;}
 
+
+/* ══ ACCOUNT — HEADER AVATAR ══ */
+.avatar-btn{width:38px;height:38px;border-radius:50%;overflow:hidden;border:2px solid var(--red);cursor:pointer;background:var(--card);display:flex;align-items:center;justify-content:center;font-size:18px;transition:transform .2s;}
+.avatar-btn:hover{transform:scale(1.08);}
+.avatar-btn img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+
+/* ══ ACCOUNT PAGE ══ */
+#pg-account{background:var(--bg);}
+.acc-wrap{max-width:520px;margin:0 auto;padding:24px 16px 60px;}
+
+/* Login screen */
+.login-screen{display:flex;flex-direction:column;align-items:center;text-align:center;padding:40px 20px;}
+.login-icon{font-size:56px;margin-bottom:20px;}
+.login-title{font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:var(--text);margin-bottom:8px;}
+.login-sub{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:32px;max-width:280px;}
+.google-btn{display:flex;align-items:center;gap:12px;background:#fff;border:1.5px solid #dadce0;border-radius:12px;padding:13px 24px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:#3c4043;cursor:pointer;transition:box-shadow .2s,transform .15s;box-shadow:0 2px 8px rgba(0,0,0,.08);}
+.google-btn:hover{box-shadow:0 4px 16px rgba(0,0,0,.15);transform:translateY(-1px);}
+.google-btn svg{width:20px;height:20px;flex-shrink:0;}
+[data-theme="dark"] .google-btn{background:#1c1c21;border-color:#2e2e35;color:#f0f0f2;}
+
+/* Profile card */
+.profile-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:24px 20px;margin-bottom:20px;display:flex;align-items:center;gap:16px;}
+[data-theme="dark"] .profile-card{background:#1c1c21;border-color:#2e2e35;}
+.profile-avatar{width:64px;height:64px;border-radius:50%;object-fit:cover;border:3px solid var(--red);flex-shrink:0;}
+.profile-avatar-placeholder{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--red),var(--orange));display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;color:#fff;flex-shrink:0;border:3px solid var(--red);}
+.profile-name{font-size:17px;font-weight:800;color:var(--text);margin-bottom:3px;}
+.profile-email{font-size:12px;color:var(--muted);}
+.profile-badge{display:inline-block;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);color:#22c55e;font-size:10px;font-weight:700;padding:2px 10px;border-radius:20px;margin-top:5px;}
+
+/* Address section */
+.acc-section-label{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding-left:2px;}
+.acc-card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:20px;}
+[data-theme="dark"] .acc-card{background:#1c1c21;border-color:#2e2e35;}
+.acc-row{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--border);}
+[data-theme="dark"] .acc-row{border-color:#2e2e35;}
+.acc-row:last-child{border-bottom:none;}
+.acc-row-icon{width:36px;height:36px;background:var(--bg);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+[data-theme="dark"] .acc-row-icon{background:#242429;}
+.acc-row-info{flex:1;}
+.acc-row-title{font-size:13px;font-weight:700;color:var(--text);}
+.acc-row-sub{font-size:11px;color:var(--muted);margin-top:1px;}
+.acc-row-edit{font-size:12px;font-weight:700;color:var(--red);cursor:pointer;white-space:nowrap;}
+.addr-input{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;background:var(--bg);font-family:'Nunito',sans-serif;font-size:13px;color:var(--text);outline:none;resize:none;margin-top:8px;transition:border .2s;}
+[data-theme="dark"] .addr-input{background:#242429;border-color:#2e2e35;color:#f0f0f2;}
+.addr-input:focus{border-color:var(--red);}
+.addr-save-btn{margin-top:8px;padding:9px 20px;background:var(--red);color:#fff;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .2s;}
+.addr-save-btn:hover{opacity:.85;}
+
+/* Order history */
+.order-item{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);gap:10px;}
+[data-theme="dark"] .order-item{border-color:#2e2e35;}
+.order-item:last-child{border-bottom:none;}
+.order-icon{font-size:22px;flex-shrink:0;}
+.order-info{flex:1;}
+.order-name{font-size:13px;font-weight:700;color:var(--text);}
+.order-date{font-size:11px;color:var(--muted);margin-top:1px;}
+.order-price{font-size:14px;font-weight:800;color:var(--red);}
+.empty-orders{text-align:center;padding:30px 20px;color:var(--muted);font-size:13px;}
+
+/* Sign out btn */
+.signout-btn{width:100%;padding:14px;background:transparent;color:var(--red);border:1.5px solid var(--red);border-radius:14px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;transition:background .2s,color .2s;margin-top:8px;}
+.signout-btn:hover{background:var(--red);color:#fff;}
+
 /* ══ MOBILE ══ */
 @media(max-width:400px){.hero h2{font-size:22px;}.food-img{width:78px;height:78px;}}
 
@@ -307,20 +372,29 @@ footer strong{color:#888;}
 <div class="header" id="mainHeader">
   <div class="logo">Spicy <span>Masti</span><small id="logoSub">Street Food & More</small></div>
   <div id="headerRight">
-    <div class="menu-btn" id="menuBtn" onclick="toggleMenu()">
-      <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+    <!-- Shows avatar if logged in, hamburger if not -->
+    <div id="headerBtn">
+      <div class="menu-btn" id="menuBtn" onclick="toggleMenu()">
+        <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- NAV MENU -->
+<!-- NAV MENU — shown only when logged in -->
 <div class="nav-menu" id="navMenu">
+  <!-- User profile mini row -->
+  <div id="navProfileRow" style="display:none;padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;">
+    <div id="navAvatar" style="width:32px;height:32px;border-radius:50%;overflow:hidden;flex-shrink:0;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:16px;"></div>
+    <div><div id="navName" style="font-size:13px;font-weight:700;color:var(--text);"></div><div style="font-size:10px;color:var(--muted);">Logged in</div></div>
+  </div>
   <a href="https://maps.app.goo.gl/5eFEcnGLxuixM33e6" target="_blank">
     <div class="nav-item"><span class="nav-icon">📍</span> Location</div>
   </a>
   <div class="nav-item" onclick="showPage('offers')"><span class="nav-icon">🏷️</span> Offers</div>
   <div class="nav-item" onclick="showPage('help')"><span class="nav-icon">❓</span> Help</div>
   <div class="nav-item" onclick="showPage('settings')"><span class="nav-icon">⚙️</span> Settings</div>
+  <div class="nav-item" onclick="showPage('account')"><span class="nav-icon">👤</span> Account</div>
 </div>
 
 <!-- ═══════════ PAGE: HOME ═══════════ -->
@@ -462,6 +536,79 @@ footer strong{color:#888;}
     </div>
   </div>
 
+  <footer><strong>Spicy Masti</strong> &nbsp;·&nbsp; © 2026 All Rights Reserved</footer>
+</div>
+
+<!-- ═══════════ PAGE: ACCOUNT ═══════════ -->
+<div class="pg" id="pg-account">
+  <div class="acc-wrap">
+
+    <!-- LOGIN SCREEN (shown when not logged in) -->
+    <div id="loginScreen">
+      <div class="login-screen">
+        <div class="login-icon">👤</div>
+        <div class="login-title">Welcome to<br/>Spicy Masti</div>
+        <div class="login-sub">Sign in to save your address, view order history and get personalised offers.</div>
+        <button class="google-btn" onclick="signInWithGoogle()">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+          </svg>
+          Continue with Google
+        </button>
+        <!-- Hidden Google One-tap div -->
+        <div id="g_id_onload"
+          data-client_id="81033567608-shtc9g7u4rg4d2t2s1riurpipfl3qgs4.apps.googleusercontent.com"
+          data-callback="handleGoogleLogin"
+          data-auto_prompt="false">
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFILE SCREEN (shown after login) -->
+    <div id="profileScreen" style="display:none;">
+
+      <!-- Profile card -->
+      <div class="profile-card">
+        <div id="profileAvatar"></div>
+        <div>
+          <div class="profile-name" id="profileName">—</div>
+          <div class="profile-email" id="profileEmail">—</div>
+          <div class="profile-badge">✓ Verified</div>
+        </div>
+      </div>
+
+      <!-- Saved Address -->
+      <div class="acc-section-label">📍 Saved Address</div>
+      <div class="acc-card" id="addrCard">
+        <div class="acc-row">
+          <div class="acc-row-icon">🏠</div>
+          <div class="acc-row-info">
+            <div class="acc-row-title" id="addrDisplay">No address saved</div>
+            <div class="acc-row-sub">Used for delivery orders</div>
+          </div>
+          <div class="acc-row-edit" onclick="toggleAddrEdit()">Edit</div>
+        </div>
+        <div id="addrEditArea" style="display:none;padding:0 18px 16px;">
+          <textarea class="addr-input" id="addrInput" rows="2" placeholder="Enter your delivery address..."></textarea>
+          <button class="addr-save-btn" onclick="saveAddress()">Save Address</button>
+        </div>
+      </div>
+
+      <!-- Order History -->
+      <div class="acc-section-label">🛒 Order History</div>
+      <div class="acc-card" id="orderHistoryCard">
+        <div class="empty-orders" id="emptyOrders">No orders yet. Start ordering! 🌶️</div>
+        <div id="orderList"></div>
+      </div>
+
+      <!-- Sign out -->
+      <button class="signout-btn" onclick="signOut()">Sign Out</button>
+
+    </div>
+  </div>
   <footer><strong>Spicy Masti</strong> &nbsp;·&nbsp; © 2026 All Rights Reserved</footer>
 </div>
 
@@ -793,6 +940,136 @@ function updateOffer(){
     bH.className=bM.className=bS.className='time-box';
   }
 }
+
+
+// ══ GOOGLE SIGN-IN ══
+const G_CLIENT_ID = '81033567608-shtc9g7u4rg4d2t2s1riurpipfl3qgs4.apps.googleusercontent.com';
+let currentUser = null;
+
+// Parse JWT from Google
+function parseJwt(token){
+  try{ return JSON.parse(atob(token.split('.')[1].replace(/-/g,'+').replace(/_/g,'/'))); }
+  catch(e){ return null; }
+}
+
+// Called by Google after login
+function handleGoogleLogin(response){
+  const payload = parseJwt(response.credential);
+  if(!payload) return;
+  currentUser = { name: payload.name, email: payload.email, picture: payload.picture };
+  localStorage.setItem('smUser', JSON.stringify(currentUser));
+  applyUserLogin();
+}
+
+function signInWithGoogle(){
+  google.accounts.id.initialize({
+    client_id: G_CLIENT_ID,
+    callback: handleGoogleLogin
+  });
+  google.accounts.id.prompt();
+}
+
+function applyUserLogin(){
+  if(!currentUser) return;
+
+  // Update header button → avatar
+  const hb = document.getElementById('headerBtn');
+  hb.innerHTML = `<div class="avatar-btn" onclick="showPage('account');closeMenu()">
+    <img src="${currentUser.picture}" onerror="this.style.display='none';this.parentNode.textContent='${currentUser.name[0]}'" />
+  </div>`;
+
+  // Nav menu profile row
+  const nr = document.getElementById('navProfileRow');
+  nr.style.display = 'flex';
+  document.getElementById('navName').textContent = currentUser.name;
+  const navAv = document.getElementById('navAvatar');
+  navAv.innerHTML = `<img src="${currentUser.picture}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;" onerror="this.style.display='none'"/>`;
+
+  // Profile screen
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('profileScreen').style.display = 'block';
+  document.getElementById('profileName').textContent = currentUser.name;
+  document.getElementById('profileEmail').textContent = currentUser.email;
+
+  // Avatar in profile
+  const pa = document.getElementById('profileAvatar');
+  pa.innerHTML = `<img src="${currentUser.picture}" class="profile-avatar" onerror="this.outerHTML='<div class=profile-avatar-placeholder>${currentUser.name[0]}</div>'"/>`;
+
+  // Load saved address
+  const savedAddr = localStorage.getItem('smAddr_' + currentUser.email);
+  if(savedAddr) document.getElementById('addrDisplay').textContent = savedAddr;
+
+  // Load order history
+  renderOrders();
+
+  // Change account page nav item label
+  pageTitles['account'] = 'My Account';
+}
+
+function signOut(){
+  currentUser = null;
+  localStorage.removeItem('smUser');
+
+  // Reset header to hamburger
+  document.getElementById('headerBtn').innerHTML = `<div class="menu-btn" id="menuBtn" onclick="toggleMenu()">
+    <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+  </div>`;
+
+  // Hide nav profile row
+  document.getElementById('navProfileRow').style.display = 'none';
+
+  // Reset profile screen
+  document.getElementById('loginScreen').style.display = 'block';
+  document.getElementById('profileScreen').style.display = 'none';
+
+  showPage('home');
+}
+
+// Address
+function toggleAddrEdit(){
+  const area = document.getElementById('addrEditArea');
+  const isHidden = area.style.display === 'none';
+  area.style.display = isHidden ? 'block' : 'none';
+  if(isHidden){
+    const cur = document.getElementById('addrDisplay').textContent;
+    document.getElementById('addrInput').value = cur === 'No address saved' ? '' : cur;
+  }
+}
+function saveAddress(){
+  const val = document.getElementById('addrInput').value.trim();
+  if(!val || !currentUser) return;
+  localStorage.setItem('smAddr_' + currentUser.email, val);
+  document.getElementById('addrDisplay').textContent = val;
+  document.getElementById('addrEditArea').style.display = 'none';
+}
+
+// Order history (demo orders stored in localStorage)
+function renderOrders(){
+  if(!currentUser) return;
+  const orders = JSON.parse(localStorage.getItem('smOrders_' + currentUser.email) || '[]');
+  const list = document.getElementById('orderList');
+  const empty = document.getElementById('emptyOrders');
+  if(orders.length === 0){ empty.style.display='block'; list.innerHTML=''; return; }
+  empty.style.display = 'none';
+  list.innerHTML = orders.map(o => `
+    <div class="order-item">
+      <div class="order-icon">🌶️</div>
+      <div class="order-info"><div class="order-name">${o.item}</div><div class="order-date">${o.date}</div></div>
+      <div class="order-price">₹${o.price}</div>
+    </div>
+  `).join('');
+}
+
+function closeMenu(){
+  const m = document.getElementById('navMenu');
+  if(m) m.style.display = 'none';
+}
+
+// Auto-login if user was previously logged in
+(function(){
+  const saved = localStorage.getItem('smUser');
+  if(saved){ try{ currentUser = JSON.parse(saved); applyUserLogin(); } catch(e){} }
+})();
 
 </script>
 </body>
