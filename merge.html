@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Spicy Masti</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Nunito:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<!-- EmailJS -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>emailjs.init("TKRMeew9fvQrl0Z44-BhJ");</script>
+<style>
+
+/* ══ ROOT VARIABLES ══ */
+:root {
+  --red:#e63946; --orange:#f4a261; --green:#22c55e;
+  --dark:#1a1a1a; --bg:#fdf8f3; --card:#ffffff;
+  --border:#f0e8de; --text:#2d2d2d; --muted:#999;
+  --blue:#3a7bd5; --help-bg:#f0f4f8; --help-border:#dde4ed;
+  --help-text:#1e2a38; --help-muted:#7a8899;
+  --set-bg:#f5f4f0; --set-surface:#ffffff; --set-surface2:#f0ede8;
+  --set-border:#e8e3dc; --set-text:#1c1c1c;
+}
+[data-theme="dark"] {
+  --bg:#111114; --card:#1c1c21; --border:#2e2e35;
+  --text:#f0f0f2; --muted:#6b6b78;
+  --help-bg:#111114; --help-border:#2e2e35;
+  --help-text:#f0f0f2; --help-muted:#6b6b78;
+  --set-bg:#111114; --set-surface:#1c1c21; --set-surface2:#242429;
+  --set-border:#2e2e35; --set-text:#f0f0f2;
+  --blue:#4a8be5;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{transition:background .35s,color .35s;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);padding-top:68px;min-height:100vh;transition:background .35s,color .35s;}
+a{text-decoration:none;color:inherit;}
+
+/* ══ PAGES ══ */
+.pg{display:none;animation:rise .4s ease both;}
+.pg.active{display:block;}
+@keyframes rise{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+
+/* ══ SPLASH ══ */
+#splash{position:fixed;inset:0;background:#1a1a1a;display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:9999;gap:18px;transition:opacity .6s ease;}
+#splash.hide{opacity:0;pointer-events:none;}
+.splash-logo{font-family:'Playfair Display',serif;font-size:42px;font-weight:900;color:#fff;letter-spacing:2px;}
+.splash-logo span{color:#f4a261;}
+.splash-sub{font-size:13px;color:#888;letter-spacing:4px;text-transform:uppercase;}
+.splash-bar{width:160px;height:3px;background:#333;border-radius:3px;overflow:hidden;margin-top:10px;}
+.splash-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--red),var(--orange));border-radius:3px;animation:load 2.2s ease forwards;}
+@keyframes load{0%{width:0%;}100%{width:100%;}}
+
+/* ══ SCROLL PROGRESS ══ */
+.scroll-progress{position:fixed;top:68px;left:0;width:0%;height:3px;background:linear-gradient(90deg,var(--red),var(--orange));z-index:1001;border-radius:0 2px 2px 0;transition:width .08s linear;}
+
+/* ══ HEADER ══ */
+.header{position:fixed;top:0;left:0;right:0;height:68px;background:var(--card);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;padding:0 20px;z-index:1000;transition:background .35s,border-color .35s;backdrop-filter:blur(10px);}
+[data-theme="dark"] .header{background:rgba(17,17,20,.95);border-color:#2e2e35;}
+.logo{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:var(--text);}
+.logo span{color:var(--red);}
+.logo small{display:block;font-family:'Nunito',sans-serif;font-size:10px;font-weight:500;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-top:-2px;}
+.menu-btn{width:40px;height:40px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;cursor:pointer;border-radius:10px;transition:background .2s;padding:6px;}
+.menu-btn:hover{background:#f5f0ea;}
+.menu-btn .bar{width:22px;height:2px;background:var(--text);border-radius:2px;transition:all .3s;transform-origin:center;}
+.menu-btn.open .bar:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.menu-btn.open .bar:nth-child(2){opacity:0;transform:scaleX(0);}
+.menu-btn.open .bar:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+.back-btn{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--muted);padding:8px 14px;border-radius:20px;border:1.5px solid var(--border);cursor:pointer;transition:all .2s;background:none;}
+.back-btn:hover{border-color:var(--red);color:var(--red);}
+
+/* ══ NAV MENU ══ */
+.nav-menu{position:fixed;top:68px;right:14px;width:210px;background:var(--card);border-radius:14px;border:1px solid var(--border);box-shadow:0 12px 40px rgba(0,0,0,.12);overflow:hidden;display:none;z-index:999;animation:dropIn .22s ease;}
+[data-theme="dark"] .nav-menu{background:#1c1c21;border-color:#2e2e35;}
+@keyframes dropIn{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);}}
+.nav-item{display:flex;align-items:center;gap:12px;padding:14px 16px;font-size:14px;font-weight:600;border-bottom:1px solid var(--border);transition:background .15s;cursor:pointer;}
+[data-theme="dark"] .nav-item{border-color:#2e2e35;color:#f0f0f2;}
+.nav-item:last-child{border-bottom:none;}
+.nav-item:hover{background:#fdf8f3;}
+[data-theme="dark"] .nav-item:hover{background:#242429;}
+.nav-icon{font-size:17px;}
+
+/* ══ HOME — HERO ══ */
+.hero{background:linear-gradient(135deg,#1a1a1a 0%,#2d1a0e 100%);margin:14px 14px 0;border-radius:18px;padding:28px 24px;color:#fff;position:relative;overflow:hidden;}
+[data-theme="dark"] .hero{background:linear-gradient(135deg,#0d0d10 0%,#1a1a1a 100%);}
+.hero::before{content:'🌶️';position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:72px;opacity:.15;}
+.hero-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.hero-tag{display:inline-block;background:var(--red);color:#fff;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;padding:4px 10px;border-radius:20px;}
+.hero-247{display:inline-flex;align-items:center;gap:8px;position:relative;background:linear-gradient(135deg,rgba(34,197,94,.12),rgba(34,197,94,.04));border:1.5px solid rgba(34,197,94,.6);color:#4ade80;font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:7px 14px;border-radius:20px;box-shadow:0 0 10px rgba(34,197,94,.25),0 0 24px rgba(34,197,94,.12),inset 0 0 10px rgba(34,197,94,.06);}
+.hero-247::after{content:'';position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);width:70%;height:6px;border-radius:50%;background:radial-gradient(ellipse at center,rgba(34,197,94,.7) 0%,transparent 75%);filter:blur(3px);animation:underGlow 2s ease-in-out infinite;}
+.hero-247::before{content:'';position:absolute;inset:-1.5px;border-radius:20px;background:linear-gradient(90deg,transparent 0%,rgba(34,197,94,.9) 40%,rgba(134,239,172,1) 50%,rgba(34,197,94,.9) 60%,transparent 100%);background-size:200% 100%;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:destination-out;mask-composite:exclude;padding:1.5px;animation:shimmerBorder 2.5s linear infinite;}
+@keyframes shimmerBorder{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+@keyframes underGlow{0%,100%{opacity:.5;transform:translateX(-50%) scaleX(.8);}50%{opacity:1;transform:translateX(-50%) scaleX(1.2);}}
+.live-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#22c55e;flex-shrink:0;position:relative;box-shadow:0 0 6px 2px rgba(34,197,94,.8);animation:dotGlow 2s ease-in-out infinite;}
+.live-dot::before{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(34,197,94,.3);animation:dotRing 2s ease-in-out infinite;}
+.live-dot::after{content:'';position:absolute;inset:-8px;border-radius:50%;background:rgba(34,197,94,.1);animation:dotRing 2s ease-in-out infinite .4s;}
+@keyframes dotGlow{0%,100%{box-shadow:0 0 5px 2px rgba(34,197,94,.7);background:#22c55e;}50%{box-shadow:0 0 12px 4px rgba(74,222,128,1);background:#86efac;}}
+@keyframes dotRing{0%{transform:scale(1);opacity:.7;}80%{transform:scale(2.6);opacity:0;}100%{transform:scale(2.6);opacity:0;}}
+.hero h2{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;line-height:1.2;margin-bottom:6px;}
+.hero h2 span{color:var(--orange);}
+.hero p{font-size:13px;color:#aaa;font-weight:400;}
+
+/* ══ CATEGORY PILLS ══ */
+.cat-scroll{display:flex;gap:8px;padding:14px 14px 6px;overflow-x:auto;scrollbar-width:none;}
+.cat-scroll::-webkit-scrollbar{display:none;}
+.cat-pill{flex-shrink:0;padding:7px 16px;border-radius:20px;border:1.5px solid var(--border);background:var(--card);font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .2s;white-space:nowrap;}
+[data-theme="dark"] .cat-pill{background:#1c1c21;border-color:#2e2e35;color:#9999a8;}
+.cat-pill:hover,.cat-pill.active{background:var(--red);border-color:var(--red);color:#fff;}
+
+/* ══ CATEGORY ══ */
+.category{margin:12px 14px;background:var(--card);border-radius:16px;border:1px solid var(--border);overflow:hidden;}
+[data-theme="dark"] .category{background:#1c1c21;border-color:#2e2e35;}
+.category-title{padding:16px 18px;font-size:16px;font-weight:800;display:flex;justify-content:space-between;align-items:center;cursor:pointer;background:var(--card);user-select:none;transition:background .15s;}
+[data-theme="dark"] .category-title{background:#1c1c21;color:#f0f0f2;}
+.category-title:hover{background:#fdf8f3;}
+[data-theme="dark"] .category-title:hover{background:#242429;}
+.cat-left{display:flex;align-items:center;gap:10px;}
+.cat-emoji{font-size:20px;}
+.item-count{font-size:11px;font-weight:600;color:var(--muted);background:#f5f0ea;padding:2px 8px;border-radius:10px;}
+[data-theme="dark"] .item-count{background:#2e2e35;color:#9999a8;}
+.arrow{font-size:12px;color:var(--muted);transition:transform .28s cubic-bezier(.4,0,.2,1);}
+.rotate{transform:rotate(90deg);}
+.items{padding:0 10px 10px;}
+.image-item{display:flex;justify-content:space-between;align-items:center;padding:12px 8px;border-bottom:1px solid var(--border);gap:12px;transition:background .15s;border-radius:10px;}
+[data-theme="dark"] .image-item{border-color:#2e2e35;}
+.image-item:last-child{border-bottom:none;}
+.image-item:hover{background:#fdf8f3;}
+[data-theme="dark"] .image-item:hover{background:#242429;}
+.item-info{flex:1;}
+.item-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.item-price{font-size:14px;font-weight:800;color:var(--red);}
+.veg-dot{display:inline-block;width:8px;height:8px;background:#22c55e;border-radius:50%;margin-right:5px;vertical-align:middle;margin-bottom:1px;}
+.food-img{width:88px;height:88px;border-radius:14px;object-fit:cover;background:#f0e8de;flex-shrink:0;}
+.hide{display:none;}
+
+/* ══ HELP PAGE ══ */
+#pg-help{background:var(--help-bg);}
+.help-wrap{max-width:600px;margin:0 auto;padding:24px 16px 60px;}
+.h-hero{background:linear-gradient(135deg,#1e2a38 0%,#2c3e55 100%);border-radius:20px;padding:30px 24px;color:#fff;margin-bottom:24px;position:relative;overflow:hidden;}
+.h-hero::after{content:'❓';position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:80px;opacity:.08;}
+.h-hero-tag{display:inline-block;background:rgba(255,255,255,.12);color:#a8c0d6;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;padding:4px 12px;border-radius:20px;margin-bottom:12px;}
+.h-hero h1{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;line-height:1.2;margin-bottom:6px;}
+.h-hero h1 span{color:var(--orange);}
+.h-hero p{font-size:13px;color:#8fa8be;}
+.call-card{background:#2a9d5c;border-radius:16px;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:24px;}
+.call-left{display:flex;align-items:center;gap:14px;}
+.call-icon{width:46px;height:46px;background:rgba(255,255,255,.18);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;}
+.call-text h3{font-size:14px;font-weight:800;color:#fff;margin-bottom:2px;}
+.call-text p{font-size:12px;color:rgba(255,255,255,.7);}
+.call-btn-link{flex-shrink:0;background:#fff;color:#2a9d5c;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;padding:10px 20px;border-radius:12px;border:none;cursor:pointer;text-decoration:none;transition:transform .15s,box-shadow .15s;box-shadow:0 4px 14px rgba(0,0,0,.12);}
+.call-btn-link:hover{transform:translateY(-1px);}
+.slabel{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--help-muted);margin-bottom:12px;padding-left:2px;}
+.faq-group{margin-bottom:24px;}
+.faq-item{background:var(--card);border:1px solid var(--help-border);border-radius:14px;margin-bottom:8px;overflow:hidden;transition:box-shadow .2s;}
+[data-theme="dark"] .faq-item{background:#1c1c21;border-color:#2e2e35;}
+.faq-item:hover{box-shadow:0 4px 16px rgba(0,0,0,.07);}
+.faq-item.open{border-color:#b8cfe8;}
+[data-theme="dark"] .faq-item.open{border-color:#3a5a7a;}
+.faq-q{width:100%;background:none;border:none;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:var(--help-text);cursor:pointer;text-align:left;}
+.faq-q-left{display:flex;align-items:center;gap:10px;}
+.faq-badge{font-size:16px;width:34px;height:34px;background:var(--help-bg);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+[data-theme="dark"] .faq-badge{background:#242429;}
+.faq-chevron{flex-shrink:0;width:18px;height:18px;stroke:var(--help-muted);transition:transform .25s;}
+.faq-item.open .faq-chevron{transform:rotate(180deg);}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .32s ease,padding .25s;font-size:13px;font-weight:400;color:var(--help-muted);line-height:1.75;padding:0 18px 0 62px;}
+.faq-item.open .faq-a{max-height:200px;padding:0 18px 16px 62px;}
+.form-card{background:var(--card);border:1px solid var(--help-border);border-radius:20px;padding:24px 20px;margin-bottom:24px;}
+[data-theme="dark"] .form-card{background:#1c1c21;border-color:#2e2e35;}
+.form-card h3{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;margin-bottom:4px;color:var(--help-text);}
+.form-card>p{font-size:12px;color:var(--help-muted);margin-bottom:20px;line-height:1.6;}
+.form-row{margin-bottom:14px;}
+.form-row label{display:block;font-size:12px;font-weight:700;margin-bottom:6px;color:var(--help-text);}
+.form-row input,.form-row textarea{width:100%;padding:12px 14px;border:1.5px solid var(--help-border);border-radius:12px;background:var(--help-bg);font-family:'Nunito',sans-serif;font-size:14px;color:var(--help-text);outline:none;transition:border .2s,background .2s;resize:none;}
+[data-theme="dark"] .form-row input,[data-theme="dark"] .form-row textarea{background:#242429;border-color:#2e2e35;color:#f0f0f2;}
+.form-row input:focus,.form-row textarea:focus{border-color:var(--blue);background:#fff;}
+[data-theme="dark"] .form-row input:focus,[data-theme="dark"] .form-row textarea:focus{background:#2e2e35;}
+.form-row input::placeholder,.form-row textarea::placeholder{color:#b0bec8;}
+.upload-area{border:2px dashed var(--help-border);border-radius:12px;background:var(--help-bg);padding:20px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;position:relative;}
+[data-theme="dark"] .upload-area{background:#242429;border-color:#2e2e35;}
+.upload-area:hover,.upload-area.dragover{border-color:var(--blue);background:#eaf1fb;}
+[data-theme="dark"] .upload-area:hover{background:#2e2e35;}
+.upload-area input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;padding:0;border:none;background:none;}
+.upload-icon{font-size:28px;margin-bottom:6px;}
+.upload-text{font-size:13px;font-weight:600;color:var(--help-text);margin-bottom:2px;}
+.upload-sub{font-size:11px;color:var(--help-muted);}
+.preview-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+.preview-wrap{position:relative;width:64px;height:64px;}
+.preview-img{width:64px;height:64px;border-radius:10px;object-fit:cover;border:1.5px solid var(--help-border);}
+.preview-remove{position:absolute;top:-5px;right:-5px;width:18px;height:18px;background:var(--red);color:#fff;border-radius:50%;font-size:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-weight:800;z-index:1;}
+.req{color:var(--red);margin-left:2px;}
+.field-error{font-size:11px;color:var(--red);font-weight:600;margin-top:5px;min-height:14px;}
+.input-invalid{border-color:var(--red)!important;background:#fff5f5!important;}
+.submit-btn{width:100%;padding:14px;background:linear-gradient(135deg,#1e2a38,#2c3e55);color:#fff;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;border:none;border-radius:14px;cursor:pointer;margin-top:6px;transition:transform .15s,box-shadow .15s;letter-spacing:.03em;}
+.submit-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(30,42,56,.25);}
+.toast-ok{display:none;background:#2a9d5c;color:#fff;font-size:13px;font-weight:700;padding:12px 18px;border-radius:12px;margin-top:12px;text-align:center;}
+.toast-ok.show{display:block;}
+.toast-err{display:none;background:var(--red);color:#fff;font-size:13px;font-weight:700;padding:12px 18px;border-radius:12px;margin-top:12px;text-align:center;}
+.toast-err.show{display:block;}
+
+/* ══ SETTINGS PAGE ══ */
+#pg-settings{background:var(--set-bg);}
+.set-wrap{max-width:520px;margin:0 auto;padding:28px 16px 70px;}
+.page-hero-row{display:flex;align-items:center;gap:14px;margin-bottom:32px;}
+.page-icon{width:52px;height:52px;background:var(--set-surface);border:1px solid var(--set-border);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.page-hero-text h1{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:var(--set-text);}
+.page-hero-text p{font-size:12px;color:var(--muted);margin-top:2px;}
+.s-section{margin-bottom:26px;}
+.s-label{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding-left:2px;}
+.s-card{background:var(--set-surface);border:1px solid var(--set-border);border-radius:18px;overflow:hidden;}
+.s-row{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--set-border);gap:14px;}
+.s-row:last-child{border-bottom:none;}
+.s-row-left{display:flex;align-items:center;gap:13px;flex:1;}
+.s-icon{width:38px;height:38px;background:var(--set-surface2);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.s-title{font-size:14px;font-weight:700;color:var(--set-text);}
+.s-sub{font-size:11px;color:var(--muted);margin-top:1px;}
+.dark-toggle-card{background:var(--set-surface);border:1px solid var(--set-border);border-radius:18px;padding:20px 18px;display:flex;align-items:center;justify-content:space-between;gap:16px;}
+.dark-toggle-left{display:flex;align-items:center;gap:14px;}
+.dark-icon{width:46px;height:46px;border-radius:14px;background:var(--set-surface2);border:1px solid var(--set-border);display:flex;align-items:center;justify-content:center;font-size:22px;}
+.dark-title{font-size:15px;font-weight:800;color:var(--set-text);}
+.dark-sub{font-size:12px;color:var(--muted);margin-top:2px;}
+.switch{position:relative;width:48px;height:26px;flex-shrink:0;}
+.switch input{opacity:0;width:0;height:0;position:absolute;}
+.switch-track{position:absolute;inset:0;border-radius:30px;background:var(--set-surface2);border:1px solid var(--set-border);cursor:pointer;transition:background .3s,border-color .3s;}
+.switch input:checked+.switch-track{background:var(--red);border-color:var(--red);}
+.switch-track::after{content:'';position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .3s cubic-bezier(.4,0,.2,1);box-shadow:0 1px 4px rgba(0,0,0,.25);}
+.switch input:checked+.switch-track::after{transform:translateX(22px);}
+.lang-options{display:flex;gap:10px;flex-wrap:wrap;}
+.lang-btn{flex:1;min-width:100px;padding:14px 10px;border-radius:14px;border:2px solid var(--set-border);background:var(--set-surface2);color:var(--muted);font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px;transition:all .2s;}
+.lang-btn .lang-flag{font-size:26px;}
+.lang-btn .lang-native{font-size:12px;color:var(--muted);font-weight:500;}
+.lang-btn:hover{border-color:var(--red);color:var(--set-text);}
+.lang-btn.active{border-color:var(--red);background:var(--set-surface);color:var(--red);}
+.version-card{background:var(--set-surface);border:1px solid var(--set-border);border-radius:18px;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;}
+.version-left{display:flex;align-items:center;gap:12px;}
+.version-icon{width:38px;height:38px;background:var(--set-surface2);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:17px;}
+.version-title{font-size:14px;font-weight:700;color:var(--set-text);}
+.version-tag{font-size:11px;background:var(--set-surface2);color:var(--muted);padding:3px 10px;border-radius:20px;font-weight:600;border:1px solid var(--set-border);}
+
+/* ══ OFFERS PAGE ══ */
+#pg-offers{background:var(--bg);}
+.off-wrap{max-width:560px;margin:0 auto;padding:24px 16px 60px;}
+.offer-card{background:var(--card);border:1.5px solid var(--border);border-radius:22px;overflow:hidden;margin-bottom:14px;position:relative;}
+[data-theme="dark"] .offer-card{background:#1c1c21;border-color:#2e2e35;}
+.offer-card.active-offer{border-color:rgba(34,197,94,.6);box-shadow:0 0 0 3px rgba(34,197,94,.1),0 8px 30px rgba(34,197,94,.15);}
+.offer-card.inactive-offer{border-color:var(--border);opacity:.75;}
+.offer-banner{background:linear-gradient(135deg,#0f1f0f 0%,#1a3a1a 50%,#0f2a0f 100%);padding:24px 22px 20px;position:relative;overflow:hidden;}
+.offer-banner::before{content:'🌙';position:absolute;right:18px;top:50%;transform:translateY(-50%);font-size:64px;opacity:.12;}
+.offer-status-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.offer-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.45);color:#4ade80;font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;padding:5px 12px;border-radius:20px;}
+.offer-badge.inactive-badge{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.15);color:#666;}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:#22c55e;animation:badgePulse 1.8s ease-in-out infinite;}
+.badge-dot.off{background:#555;animation:none;}
+@keyframes badgePulse{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.6);}50%{box-shadow:0 0 0 4px rgba(34,197,94,0);}}
+.discount-big{font-family:'Playfair Display',serif;font-size:52px;font-weight:900;color:#fff;line-height:1;margin-bottom:4px;}
+.discount-big span{color:#4ade80;}
+.offer-title{font-size:15px;font-weight:700;color:rgba(255,255,255,.85);margin-bottom:4px;}
+.offer-sub{font-size:12px;color:rgba(255,255,255,.4);}
+.offer-body{padding:18px 22px;}
+.offer-time-row{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+.time-icon{font-size:20px;}
+.time-label{font-size:12px;color:var(--muted);font-weight:600;margin-bottom:2px;}
+.time-value{font-size:15px;font-weight:800;color:var(--text);}
+.status-box{border-radius:14px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.status-box.active-box{background:linear-gradient(135deg,rgba(34,197,94,.12),rgba(34,197,94,.05));border:1px solid rgba(34,197,94,.3);}
+.status-box.inactive-box{background:var(--bg);border:1px solid var(--border);}
+.status-left h4{font-size:13px;font-weight:800;margin-bottom:2px;}
+.status-left h4.green{color:#22c55e;}
+.status-left h4.muted{color:var(--muted);}
+.status-left p{font-size:11px;color:var(--muted);}
+.countdown{display:flex;gap:6px;}
+.time-box{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:6px 10px;text-align:center;min-width:42px;}
+[data-theme="dark"] .time-box{background:#242429;border-color:#2e2e35;}
+.time-box .num{font-size:16px;font-weight:800;color:var(--text);line-height:1;}
+.time-box .lbl{font-size:9px;color:var(--muted);font-weight:600;letter-spacing:.05em;text-transform:uppercase;}
+.time-box.green-box{background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.35);}
+.time-box.green-box .num{color:#22c55e;}
+.terms{margin-top:14px;font-size:11px;color:var(--muted);line-height:1.7;border-top:1px solid var(--border);padding-top:12px;}
+.terms strong{color:var(--text);}
+.soon-card{background:var(--card);border:1.5px dashed var(--border);border-radius:18px;padding:28px 20px;text-align:center;margin-bottom:14px;}
+[data-theme="dark"] .soon-card{background:#1c1c21;border-color:#2e2e35;}
+.soon-icon{font-size:36px;margin-bottom:10px;}
+.soon-title{font-size:15px;font-weight:800;color:var(--text);margin-bottom:4px;}
+.soon-sub{font-size:12px;color:var(--muted);}
+
+/* ══ FOOTER ══ */
+footer{text-align:center;padding:24px 20px;background:#1a1a1a;color:#555;font-size:12px;margin-top:10px;letter-spacing:.04em;}
+[data-theme="dark"] footer{background:#0d0d10;}
+footer strong{color:#888;}
+
+/* ══ MOBILE ══ */
+@media(max-width:400px){.hero h2{font-size:22px;}.food-img{width:78px;height:78px;}}
+
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="splash-logo">Spicy <span>Masti</span></div>
+  <div class="splash-sub">Street Food & More</div>
+  <div class="splash-bar"><div class="splash-bar-fill"></div></div>
+</div>
+
+<!-- SCROLL PROGRESS -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- HEADER -->
+<div class="header" id="mainHeader">
+  <div class="logo">Spicy <span>Masti</span><small id="logoSub">Street Food & More</small></div>
+  <div id="headerRight">
+    <div class="menu-btn" id="menuBtn" onclick="toggleMenu()">
+      <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV MENU -->
+<div class="nav-menu" id="navMenu">
+  <a href="https://maps.app.goo.gl/5eFEcnGLxuixM33e6" target="_blank">
+    <div class="nav-item"><span class="nav-icon">📍</span> Location</div>
+  </a>
+  <div class="nav-item" onclick="showPage('offers')"><span class="nav-icon">🏷️</span> Offers</div>
+  <div class="nav-item" onclick="showPage('help')"><span class="nav-icon">❓</span> Help</div>
+  <div class="nav-item" onclick="showPage('settings')"><span class="nav-icon">⚙️</span> Settings</div>
+</div>
+
+<!-- ═══════════ PAGE: HOME ═══════════ -->
+<div class="pg active" id="pg-home">
+
+  <div class="hero">
+    <div class="hero-top">
+      <div class="hero-tag">🌶️ Desi Flavours</div>
+      <div class="hero-247"><span class="live-dot"></span>Open 24/7</div>
+    </div>
+    <h2>Bold Food,<br/><span>Bolder Taste.</span></h2>
+    <p>Fresh made • Street style • Full of flavour</p>
+  </div>
+
+  <div class="cat-scroll" id="catScroll">
+    <div class="cat-pill active" onclick="filterCat('all',this)">🍽️ All</div>
+    <div class="cat-pill" onclick="filterCat('burger',this)">🍔 Burger</div>
+    <div class="cat-pill" onclick="filterCat('maggi',this)">🍜 Maggi</div>
+    <div class="cat-pill" onclick="filterCat('snacks',this)">🍿 Snacks</div>
+    <div class="cat-pill" onclick="filterCat('breads',this)">🥖 Breads</div>
+    <div class="cat-pill" onclick="filterCat('pasta',this)">🍝 Pasta</div>
+    <div class="cat-pill" onclick="filterCat('shakes',this)">🥤 Shakes</div>
+    <div class="cat-pill" onclick="filterCat('soup',this)">🥣 Soup</div>
+    <div class="cat-pill" onclick="filterCat('dessert',this)">🍮 Dessert</div>
+  </div>
+
+  <!-- BURGER -->
+  <div class="category" id="burger">
+    <div class="category-title" onclick="toggle(this)">
+      <div class="cat-left"><span class="cat-emoji">🍔</span> Burger <span class="item-count">4 items</span></div>
+      <span class="arrow">▶</span>
+    </div>
+    <div class="items">
+      <div class="image-item"><div class="item-info"><div class="item-name"><span class="veg-dot"></span>Aloo Tikki Burger</div><div class="item-price">₹40</div></div><img src="https://tinyurl.com/yrubt2t9" class="food-img" loading="lazy"></div>
+      <div class="image-item"><div class="item-info"><div class="item-name"><span class="veg-dot"></span>Cheese Burger</div><div class="item-price">₹55</div></div><img src="https://tinyurl.com/yb6f6u82" class="food-img" loading="lazy"></div>
+      <div class="image-item"><div class="item-info"><div class="item-name"><span class="veg-dot"></span>Double Tikki Burger</div><div class="item-price">₹60</div></div><img src="https://tinyurl.com/5dfncah4" class="food-img" loading="lazy"></div>
+      <div class="image-item"><div class="item-info"><div class="item-name"><span class="veg-dot"></span>French Burger</div><div class="item-price">₹80</div></div><img src="https://tinyurl.com/58bezydd" class="food-img" loading="lazy"></div>
+    </div>
+  </div>
+
+  <!-- MAGGI -->
+  <div class="category" id="maggi">
+    <div class="category-title" onclick="toggle(this)">
+      <div class="cat-left"><span class="cat-emoji">🍜</span> Maggi <span class="item-count">6 items</span></div>
+      <span class="arrow">▶</span>
+    </div>
+    <div class="items">
+      <div class="image-item"><div class="item-info"><div class="item-name"><span class="veg-dot"></span>Masala Maggi</div><div class="item-price">₹30</div></div><img src="https://tinyurl.com/4u45p4b2" class="food-img" loading="lazy"></div>
+      <div class="image-item"><div class="item-info"><div class="item-name"><span class="veg-dot"></span>Double Masala Maggi</div><div class="item-price">₹35</div></div><img src="" class="food-img" loading="lazy"></div>
+      <div class="image-item"><div class="item-info"><div class="item-name"><span class="veg-dot"></span>Veggie Maggi</div><div class="item-price">₹45</div></div><img src="https://tinyurl.com/3mafz6wm" class="food-img" loading="lazy"></div>
+      <div class="image-item"><div class="item-info"><div class="item-name"><span class="veg-dot"></span>Cheese Maggi</div><div class="item-price">₹60</div></div><img src="https://tinyurl.com/yusachuc" class="food-img" loading="lazy"></div>
+      <div class="image-item"><div class="item-info"><div class="item-name"><span class="veg-dot"></span>Chilli Hot Garlic Maggi</div><div class="item-price">₹70</div></div><img src="https://tinyurl.com/34k5xxce" class="food-img" loading="lazy"></div>
+      <div class="image-item"><div class="item-info"><div class="item-name"><span class="veg-dot"></span>Maggi Delight</div><div class="item-price">₹80</div></div><img src="https://tinyurl.com/3nmrktkw" class="food-img" loading="lazy"></div>
+    </div>
+  </div>
+
+  <!-- SNACKS -->
+  <div class="category" id="snacks">
+    <div class="category-title" onclick="toggle(this)">
+      <div class="cat-left"><span class="cat-emoji">🍿</span> Snacks <span class="item-count">7 items</span></div>
+      <span class="arrow">▶</span>
+    </div>
+    <div class="items">
+      <div class="image-item"><div class="item-info"><div class="item-name"><span class="veg-dot"></span>Plain Sweetcorn</div><div class="item-price">₹40</div></div><img src="" class="food-img" loading="lazy"></div>
+      <div class="image-item"><div class="item-info"><div class="item-name"><span class="veg-dot"></span>Classic Sweetcorn</div><div class="item-price">₹50</div></div><img src="https://tinyurl.com/zz5yhdr4" class="food-img" loading="lazy"></div>
+      <div class="image-item"><div class="item-info"><div class="item-name"><span class="veg-dot"></span>Butter Masala Sweetcorn</div><div class="item-price">₹50</div></div><img src="https://tinyurl.com/yzp8brkb" class="food-img" loading="lazy"></div>
+      <div class="image-item"><div class="item-info"><div class="item-name"><span class="veg-dot"></span>Tandoori Sweetcorn</div><div class="item-price">₹60</div></div><img src="https://tinyurl.com/yremazvx" class="food-img" loading="lazy"></div>
+      <div class="image-item"><div class="item-info"><div class="item-name"><span class="veg-dot"></span>French Fries</div><div class="item-price">₹80</div></div><img src="https://tinyurl.com/ywse7d4h" class="food-img" loading="lazy"></div>
+      <div class="image-item"><div class="item-info"><div class="item-name"><span class="veg-dot"></span>Peri Peri Fries</div><div class="item-price">₹90</div></div><img src="https://tinyurl.com/562vp3af" class="food-img" loading="lazy"></div>
+      <div class="image-item"><div class="item-info"><div class="item-name"><span class="veg-dot"></span>Cheese Fries</div><div class="item-price">₹120</div></div><img src="https://tinyurl.com/mr3cu32t" class="food-img" loading="lazy"></div>
+    </div>
+  </div>
+
+  <!-- BREADS -->
+  <div class="category" id="breads">
+    <div class="category-title" onclick="toggle(this)">
+      <div class="cat-left"><span class="cat-emoji">🥖</span> Breads <span class="item-count">3 items</span></div>
+      <span class="arrow">▶</span>
+    </div>
+    <div class="items">
+      <div class="image-item"><div class="item-info"><div class="item-name"><span class="veg-dot"></span>Cheese Garlic Bread</div><div class="item-price">₹80</div></div><img src="" class="food-img" loading="lazy"></div>
+      <div class="image-item"><div class="item-info"><div class="item-name"><span class="veg-dot"></span>Sweetcorn Garlic Bread</div><div class="item-price">₹90</div></div><img src="https://tinyurl.com/2ybjpyrn" class="food-img" loading="lazy"></div>
+      <div class="image-item"><div class="item-info"><div class="item-name"><span class="veg-dot"></span>Stuffed Garlic Bread</div><div class="item-price">₹100</div></div><img src="" class="food-img" loading="lazy"></div>
+    </div>
+  </div>
+
+  <!-- PASTA -->
+  <div class="category" id="pasta">
+    <div class="category-title" onclick="toggle(this)">
+      <div class="cat-left"><span class="cat-emoji">🍝</span> Pasta <span class="item-count">6 items</span></div>
+      <span class="arrow">▶</span>
+    </div>
+    <div class="items">
+      <div class="image-item"><div class="item-info"><div class="item-name"><span class="veg-dot"></span>Vegetables Macaroni</div><div class="item-price">₹80 · ₹110</div></div><img src="https://tinyurl.com/2u5tukra" class="food-img" loading="lazy"></div>
+      <div class="image-item"><div class="item-info"><div class="item-name"><span class="veg-dot"></span>Ghar Jesa Pasta</div><div class="item-price">₹80 · ₹110</div></div><img src="https://tinyurl.com/yadcu236" class="food-img" loading="lazy"></div>
+      <div class="image-item"><div class="item-info"><div class="item-name"><span class="veg-dot"></span>White Sauce Pasta</div><div class="item-price">₹110 · ₹140</div></div><img src="https://tinyurl.com/y434z5hy" class="food-img" loading="lazy"></div>
+      <div class="image-item"><div class="item-info"><div class="item-name"><span class="veg-dot"></span>Red Sauce Pasta</div><div class="item-price">₹110 · ₹140</div></div><img src="https://tinyurl.com/bdfhs6a7" class="food-img" loading="lazy"></div>
+      <div class="image-item"><div class="item-info"><div class="item-name"><span class="veg-dot"></span>Mix Sauce Pasta</div><div class="item-price">₹110 · ₹140</div></div><img src="https://tinyurl.com/56h3bxh9" class="food-img" loading="lazy"></div>
+      <div class="image-item"><div class="item-info"><div class="item-name"><span class="veg-dot"></span>Pasta Delight</div><div class="item-price">₹130 · ₹160</div></div><img src="https://tinyurl.com/ms55azzt" class="food-img" loading="lazy"></div>
+    </div>
+  </div>
+
+  <!-- SHAKES -->
+  <div class="category" id="shakes">
+    <div class="category-title" onclick="toggle(this)">
+      <div class="cat-left"><span class="cat-emoji">🥤</span> Shakes <span class="item-count">5 items</span></div>
+      <span class="arrow">▶</span>
+    </div>
+    <div class="items">
+      <div class="image-item"><div class="item-info"><div class="item-name"><span class="veg-dot"></span>Iced Americano</div><div class="item-price">₹80</div></div><img src="https://tinyurl.com/47fy4cfc" class="food-img" loading="lazy"></div>
+      <div class="image-item"><div class="item-info"><div class="item-name"><span class="veg-dot"></span>Cold Coffee Shake</div><div class="item-price">₹100</div></div><img src="https://tinyurl.com/5ewfwb6m" class="food-img" loading="lazy"></div>
+      <div class="image-item"><div class="item-info"><div class="item-name"><span class="veg-dot"></span>Oreo Shake</div><div class="item-price">₹110</div></div><img src="https://tinyurl.com/cah7u96v" class="food-img" loading="lazy"></div>
+      <div class="image-item"><div class="item-info"><div class="item-name"><span class="veg-dot"></span>KitKat Shake</div><div class="item-price">₹110</div></div><img src="" class="food-img" loading="lazy"></div>
+      <div class="image-item"><div class="item-info"><div class="item-name"><span class="veg-dot"></span>Chocolate Shake</div><div class="item-price">₹120</div></div><img src="https://tinyurl.com/yc435uyb" class="food-img" loading="lazy"></div>
+    </div>
+  </div>
+
+  <!-- SOUP -->
+  <div class="category" id="soup">
+    <div class="category-title" onclick="toggle(this)">
+      <div class="cat-left"><span class="cat-emoji">🥣</span> Soup <span class="item-count">3 items</span></div>
+      <span class="arrow">▶</span>
+    </div>
+    <div class="items">
+      <div class="image-item"><div class="item-info"><div class="item-name"><span class="veg-dot"></span>Tomato Soup</div><div class="item-price">₹50</div></div><img src="https://tinyurl.com/a6tsj8ew" class="food-img" loading="lazy"></div>
+      <div class="image-item"><div class="item-info"><div class="item-name"><span class="veg-dot"></span>Mix Veg Soup</div><div class="item-price">₹50</div></div><img src="https://tinyurl.com/4xcr62a7" class="food-img" loading="lazy"></div>
+      <div class="image-item"><div class="item-info"><div class="item-name"><span class="veg-dot"></span>Hot &amp; Sour</div><div class="item-price">₹50</div></div><img src="https://tinyurl.com/yxwcxcy6" class="food-img" loading="lazy"></div>
+    </div>
+  </div>
+
+  <!-- DESSERT -->
+  <div class="category" id="dessert">
+    <div class="category-title" onclick="toggle(this)">
+      <div class="cat-left"><span class="cat-emoji">🍮</span> Dessert <span class="item-count">1 item</span></div>
+      <span class="arrow">▶</span>
+    </div>
+    <div class="items">
+      <div class="image-item"><div class="item-info"><div class="item-name"><span class="veg-dot"></span>Gulab Jamun (3 pcs)</div><div class="item-price">₹50</div></div><img src="https://tinyurl.com/ype23ptn" class="food-img" loading="lazy"></div>
+    </div>
+  </div>
+
+  <footer><strong>Spicy Masti</strong> &nbsp;·&nbsp; © 2026 All Rights Reserved</footer>
+</div>
+
+<!-- ═══════════ PAGE: HELP ═══════════ -->
+<div class="pg" id="pg-help">
+  <div class="help-wrap">
+    <div class="h-hero">
+      <div class="h-hero-tag">Support Centre</div>
+      <h1>How can we <span>help you?</span></h1>
+      <p>Find answers below or get in touch with us directly.</p>
+    </div>
+    <div class="call-card">
+      <div class="call-left">
+        <div class="call-icon">📞</div>
+        <div class="call-text"><h3>Call Us Directly</h3><p>Available 24/7 · We're always here</p></div>
+      </div>
+      <a href="tel:+917290945445" class="call-btn-link">Call Now</a>
+    </div>
+    <div class="slabel">🛒 Order Related</div>
+    <div class="faq-group">
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><div class="faq-q-left"><div class="faq-badge">📦</div> Can I customise my order?</div><svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button><div class="faq-a">Yes! Just mention your preferences when ordering — we'll do our best to accommodate. You can also call us directly and we'll sort it out.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><div class="faq-q-left"><div class="faq-badge">⏱️</div> How long does my order take?</div><svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button><div class="faq-a">Most orders are ready within 10–20 minutes. During peak hours it may take slightly longer. We'll always keep you informed.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><div class="faq-q-left"><div class="faq-badge">❌</div> Can I cancel my order?</div><svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button><div class="faq-a">Cancellations are accepted only before preparation begins. Please call us immediately at +91 72909 45445 to request a cancellation.</div></div>
+    </div>
+    <div class="slabel">📍 Timings &amp; Location</div>
+    <div class="faq-group">
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><div class="faq-q-left"><div class="faq-badge">🕐</div> What are your opening hours?</div><svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button><div class="faq-a">Spicy Masti is open 24/7 — every day, all day and night. No holidays, no closing time. We're always here for you! 🌶️</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><div class="faq-q-left"><div class="faq-badge">🗺️</div> Where are you located?</div><svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button><div class="faq-a">You can find our exact location on Google Maps. Tap the Location option in the main menu and it will open directions for you.</div></div>
+    </div>
+    <div class="slabel">💳 Payment Methods</div>
+    <div class="faq-group">
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><div class="faq-q-left"><div class="faq-badge">💵</div> What payment methods do you accept?</div><svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button><div class="faq-a">We accept Cash, UPI (GPay, PhonePe, Paytm), and all major debit/credit cards. No extra charges on any payment method.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><div class="faq-q-left"><div class="faq-badge">🔁</div> What if I was charged incorrectly?</div><svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button><div class="faq-a">Please call us immediately at +91 72909 45445 or use the contact form below with your payment screenshot and we'll resolve it right away.</div></div>
+    </div>
+    <div class="slabel">✉️ Send Us a Message</div>
+    <div class="form-card">
+      <h3>Still need help?</h3>
+      <p>All fields are required. Fill in the form and we'll get back to you soon.</p>
+      <div class="form-row"><label>Your Name <span class="req">*</span></label><input type="text" id="fname" placeholder="e.g. Rahul Sharma"/><div class="field-error" id="err-name"></div></div>
+      <div class="form-row"><label>Phone Number <span class="req">*</span></label><input type="tel" id="fphone" placeholder="10-digit number" maxlength="10"/><div class="field-error" id="err-phone"></div></div>
+      <div class="form-row"><label>Gmail Address <span class="req">*</span></label><input type="email" id="fgmail" placeholder="e.g. yourname@gmail.com"/><div class="field-error" id="err-gmail"></div></div>
+      <div class="form-row"><label>Describe your issue <span class="req">*</span></label><textarea id="fdesc" rows="4" placeholder="Tell us what happened or what you need help with..."></textarea><div class="field-error" id="err-desc"></div></div>
+      <div class="form-row">
+        <label>Attach Images <span class="req">*</span> <span style="font-weight:400;color:var(--muted)">(max 5)</span></label>
+        <div class="upload-area" id="uploadArea">
+          <input type="file" id="fileInput" accept="image/*" multiple onchange="handleFiles(this.files)"/>
+          <div class="upload-icon">🖼️</div>
+          <div class="upload-text">Tap to upload images</div>
+          <div class="upload-sub">JPG, PNG, WEBP · Max 5 images</div>
+        </div>
+        <div class="preview-grid" id="previewGrid"></div>
+        <div class="field-error" id="err-images"></div>
+      </div>
+      <button class="submit-btn" id="submitBtn" onclick="submitForm()">Send Message →</button>
+      <div class="toast-ok" id="toastOk">✅ Message sent! We'll get back to you soon.</div>
+      <div class="toast-err" id="toastErr">❌ Failed to send. Please try again.</div>
+    </div>
+  </div>
+  <footer><strong>Spicy Masti</strong> &nbsp;·&nbsp; © 2026 All Rights Reserved</footer>
+</div>
+
+<!-- ═══════════ PAGE: SETTINGS ═══════════ -->
+<div class="pg" id="pg-settings">
+  <div class="set-wrap">
+    <div class="page-hero-row">
+      <div class="page-icon">⚙️</div>
+      <div class="page-hero-text"><h1>Settings</h1><p>Personalise your Spicy Masti experience</p></div>
+    </div>
+    <div class="s-section">
+      <div class="s-label">🌙 Appearance</div>
+      <div class="dark-toggle-card">
+        <div class="dark-toggle-left">
+          <div class="dark-icon" id="darkIcon">☀️</div>
+          <div><div class="dark-title" id="darkTitle">Light Mode</div><div class="dark-sub" id="darkSub">Tap to switch to dark mode</div></div>
+        </div>
+        <label class="switch"><input type="checkbox" id="darkSwitch" onchange="toggleDark()"/><div class="switch-track"></div></label>
+      </div>
+    </div>
+    <div class="s-section">
+      <div class="s-label">🌐 Language</div>
+      <div class="s-card">
+        <div class="s-row" style="flex-direction:column;align-items:flex-start;gap:14px;">
+          <div class="s-row-left"><div class="s-icon">🗣️</div><div><div class="s-title" id="langTitle">Choose your language</div><div class="s-sub" id="langSub">Select the language you prefer</div></div></div>
+          <div class="lang-options" style="width:100%;">
+            <button class="lang-btn active" id="btn-en" onclick="setLang('en')"><span class="lang-flag">🇬🇧</span>English<span class="lang-native">English</span></button>
+            <button class="lang-btn" id="btn-hi" onclick="setLang('hi')"><span class="lang-flag">🇮🇳</span>हिंदी<span class="lang-native">Hindi</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="s-section">
+      <div class="s-label">ℹ️ App Info</div>
+      <div class="version-card">
+        <div class="version-left"><div class="version-icon">🌶️</div><div><div class="version-title">Spicy Masti</div><div class="s-sub">Cloud Kitchen · Faridabad</div></div></div>
+        <div class="version-tag">v1.0</div>
+      </div>
+    </div>
+  </div>
+  <footer><strong>Spicy Masti</strong> &nbsp;·&nbsp; © 2026 All Rights Reserved</footer>
+</div>
+
+<!-- ═══════════ PAGE: OFFERS ═══════════ -->
+<div class="pg" id="pg-offers">
+  <div class="off-wrap">
+    <div class="slabel">🔥 Active Offers</div>
+    <div class="offer-card" id="offerCard">
+      <div class="offer-banner">
+        <div class="offer-status-row">
+          <div class="offer-badge" id="offerBadge"><span class="badge-dot" id="badgeDot"></span><span id="badgeText">Live Now</span></div>
+          <span style="font-size:11px;color:rgba(255,255,255,.3);font-weight:600;">MIDNIGHT DEAL</span>
+        </div>
+        <div class="discount-big"><span>30%</span> OFF</div>
+        <div class="offer-title">All Menu Items</div>
+        <div class="offer-sub">Every night from 11:00 PM to 12:00 AM</div>
+      </div>
+      <div class="offer-body">
+        <div class="offer-time-row"><span class="time-icon">🕚</span><div><div class="time-label">Offer Window</div><div class="time-value">11:00 PM — 12:00 AM · Every Day</div></div></div>
+        <div class="status-box" id="statusBox">
+          <div class="status-left"><h4 id="statusTitle">Checking...</h4><p id="statusSub">Please wait</p></div>
+          <div class="countdown">
+            <div class="time-box" id="boxH"><div class="num" id="numH">--</div><div class="lbl">Hrs</div></div>
+            <div class="time-box" id="boxM"><div class="num" id="numM">--</div><div class="lbl">Min</div></div>
+            <div class="time-box" id="boxS"><div class="num" id="numS">--</div><div class="lbl">Sec</div></div>
+          </div>
+        </div>
+        <div class="terms"><strong>Terms:</strong> Valid on all menu items · Cannot be combined with other offers · Valid only between 11:00 PM and 12:00 AM daily.</div>
+      </div>
+    </div>
+    <div class="slabel" style="margin-top:10px;">🗓️ More Offers</div>
+    <div class="soon-card"><div class="soon-icon">🎁</div><div class="soon-title">More deals coming soon!</div><div class="soon-sub">We're working on exciting new offers for you. Stay tuned!</div></div>
+  </div>
+  <footer><strong>Spicy Masti</strong> &nbsp;·&nbsp; © 2026 All Rights Reserved</footer>
+</div>
+
+<script>
+
+// ══ PAGE NAVIGATION ══
+const pageTitles = { home:'Street Food & More', help:'Help & Support', settings:'Settings', offers:'Offers & Deals' };
+
+function showPage(name) {
+  document.querySelectorAll('.pg').forEach(p => p.classList.remove('active'));
+  document.getElementById('pg-' + name).classList.add('active');
+  document.getElementById('logoSub').textContent = pageTitles[name] || 'Street Food & More';
+  // Header right: show back btn for sub-pages, hamburger for home
+  const hr = document.getElementById('headerRight');
+  if (name === 'home') {
+    hr.innerHTML = '<div class="menu-btn" id="menuBtn" onclick="toggleMenu()"><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>';
+  } else {
+    hr.innerHTML = '<button class="back-btn" onclick="showPage(\'home\')">← Menu</button>';
+  }
+  // close nav menu
+  const nm = document.getElementById('navMenu');
+  if(nm) nm.style.display = 'none';
+  window.scrollTo(0,0);
+  // start offer timer if on offers page
+  if(name === 'offers') { updateOffer(); if(!offerTimer) offerTimer = setInterval(updateOffer, 1000); }
+  else { if(offerTimer){ clearInterval(offerTimer); offerTimer = null; } }
+}
+
+// ══ SPLASH ══
+document.body.style.overflow = 'hidden';
+setTimeout(function(){
+  document.getElementById('splash').classList.add('hide');
+  setTimeout(()=>{ document.getElementById('splash').style.display='none'; document.body.style.overflow=''; }, 650);
+}, 2400);
+
+// ══ HAMBURGER ══
+function toggleMenu(){
+  const menu = document.getElementById('navMenu');
+  const btn  = document.getElementById('menuBtn');
+  if(!btn) return;
+  const open = menu.style.display === 'block';
+  menu.style.display = open ? 'none' : 'block';
+  if(btn) btn.classList.toggle('open', !open);
+}
+document.addEventListener('click', function(e){
+  const menu = document.getElementById('navMenu');
+  const btn  = document.getElementById('menuBtn');
+  if(menu && menu.style.display==='block' && !menu.contains(e.target) && btn && !btn.contains(e.target)){
+    menu.style.display='none'; if(btn) btn.classList.remove('open');
+  }
+});
+
+// ══ CATEGORY TOGGLE ══
+function toggle(el){
+  const items = el.nextElementSibling;
+  const arrow = el.querySelector('.arrow');
+  items.classList.toggle('hide');
+  arrow.classList.toggle('rotate');
+}
+
+// ══ CATEGORY FILTER ══
+function filterCat(id, pill){
+  document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+  pill.classList.add('active');
+  document.querySelectorAll('#pg-home .category').forEach(c => {
+    c.style.display = (id==='all' || c.id===id) ? 'block' : 'none';
+  });
+  if(id !== 'all') window.scrollTo({top:120, behavior:'smooth'});
+}
+
+// ══ SCROLL PROGRESS ══
+window.addEventListener('scroll', function(){
+  const doc = document.documentElement;
+  const pct = doc.scrollHeight - doc.clientHeight > 0 ? (doc.scrollTop / (doc.scrollHeight - doc.clientHeight)) * 100 : 0;
+  document.getElementById('scrollProgress').style.width = pct + '%';
+});
+
+// ══ FAQ TOGGLE ══
+function toggleFaq(btn){
+  const item = btn.closest('.faq-item');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+  if(!isOpen) item.classList.add('open');
+}
+
+// ══ FORM — IMAGE UPLOADS ══
+let selectedFiles = [];
+function handleFiles(files){
+  const rem = 5 - selectedFiles.length;
+  Array.from(files).slice(0, rem).forEach(f => { if(f.type.startsWith('image/')) selectedFiles.push(f); });
+  renderPreviews();
+  if(selectedFiles.length > 0){ clearErr('err-images'); document.getElementById('uploadArea').style.borderColor=''; }
+}
+function renderPreviews(){
+  const grid = document.getElementById('previewGrid'); grid.innerHTML = '';
+  selectedFiles.forEach((f,i) => {
+    const url = URL.createObjectURL(f);
+    const w = document.createElement('div'); w.className='preview-wrap';
+    w.innerHTML=`<img src="${url}" class="preview-img"/><div class="preview-remove" onclick="removeFile(${i})">✕</div>`;
+    grid.appendChild(w);
+  });
+}
+function removeFile(i){ selectedFiles.splice(i,1); renderPreviews(); }
+const ua = document.getElementById('uploadArea');
+ua.addEventListener('dragover', e=>{ e.preventDefault(); ua.classList.add('dragover'); });
+ua.addEventListener('dragleave', ()=>ua.classList.remove('dragover'));
+ua.addEventListener('drop', e=>{ e.preventDefault(); ua.classList.remove('dragover'); handleFiles(e.dataTransfer.files); });
+
+// ══ FORM — VALIDATION + EMAILJS ══
+function clearErr(id){ const el=document.getElementById(id); if(el) el.textContent=''; }
+function showErr(id,msg){ const el=document.getElementById(id); if(el) el.textContent=msg; }
+function setInvalid(el){ el.classList.add('input-invalid'); }
+function setValid(el){ el.classList.remove('input-invalid'); }
+
+function submitForm(){
+  const nameEl=document.getElementById('fname'), phoneEl=document.getElementById('fphone'),
+        gmailEl=document.getElementById('fgmail'), descEl=document.getElementById('fdesc');
+  const name=nameEl.value.trim(), phone=phoneEl.value.trim(), gmail=gmailEl.value.trim(), desc=descEl.value.trim();
+  ['err-name','err-phone','err-gmail','err-desc'].forEach(id=>clearErr(id));
+  [nameEl,phoneEl,gmailEl,descEl].forEach(el=>setValid(el));
+  let valid=true;
+  if(!name){ showErr('err-name','Please enter your name.'); setInvalid(nameEl); valid=false; }
+  if(!phone){ showErr('err-phone','Please enter your phone number.'); setInvalid(phoneEl); valid=false; }
+  else if(!/^[0-9]{10}$/.test(phone)){ showErr('err-phone','Phone number must be exactly 10 digits.'); setInvalid(phoneEl); valid=false; }
+  if(!gmail){ showErr('err-gmail','Please enter your Gmail address.'); setInvalid(gmailEl); valid=false; }
+  else if(!/^[^\s@]+@gmail\.com$/i.test(gmail)){ showErr('err-gmail','Please enter a valid Gmail address.'); setInvalid(gmailEl); valid=false; }
+  if(!desc){ showErr('err-desc','Please describe your issue.'); setInvalid(descEl); valid=false; }
+  if(selectedFiles.length===0){ showErr('err-images','Please attach at least one image.'); document.getElementById('uploadArea').style.borderColor='var(--red)'; valid=false; }
+  else{ document.getElementById('uploadArea').style.borderColor=''; clearErr('err-images'); }
+  if(!valid) return;
+  const btn=document.getElementById('submitBtn'); btn.textContent='Sending...'; btn.disabled=true;
+  emailjs.send('service_arzyuym','template_slqoir7',{name,phone,gmail,message:desc})
+    .then(()=>{
+      btn.textContent='Send Message →'; btn.disabled=false;
+      nameEl.value=''; phoneEl.value=''; gmailEl.value=''; descEl.value='';
+      selectedFiles=[]; renderPreviews();
+      const t=document.getElementById('toastOk'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),4000);
+    },()=>{
+      btn.textContent='Send Message →'; btn.disabled=false;
+      const t=document.getElementById('toastErr'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),4000);
+    });
+}
+
+// ══ SETTINGS — DARK MODE + LANGUAGE ══
+const settingLabels = {
+  en:{ lightTitle:'Light Mode', lightSub:'Tap to switch to dark mode', darkTitle:'Dark Mode', darkSub:'Tap to switch to light mode' },
+  hi:{ lightTitle:'लाइट मोड', lightSub:'डार्क मोड पर स्विच करें', darkTitle:'डार्क मोड', darkSub:'लाइट मोड पर स्विच करें' }
+};
+function loadSettings(){ try{ return JSON.parse(localStorage.getItem('smSettings'))||{lang:'en',dark:false}; }catch(e){ return{lang:'en',dark:false}; } }
+function saveSettings(){ localStorage.setItem('smSettings',JSON.stringify({lang:currentLang,dark:isDark})); }
+
+let cfg=loadSettings(), currentLang=cfg.lang||'en', isDark=cfg.dark||false;
+
+function applyTheme(){ document.documentElement.setAttribute('data-theme',isDark?'dark':'light'); }
+function applyLangLabels(){
+  const l=settingLabels[currentLang]||settingLabels['en'];
+  document.getElementById('darkIcon').textContent=isDark?'🌙':'☀️';
+  document.getElementById('darkTitle').textContent=isDark?l.darkTitle:l.lightTitle;
+  document.getElementById('darkSub').textContent=isDark?l.darkSub:l.lightSub;
+  document.getElementById('langTitle').textContent=currentLang==='hi'?'अपनी भाषा चुनें':'Choose your language';
+  document.getElementById('langSub').textContent=currentLang==='hi'?'पसंदीदा भाषा चुनें':'Select the language you prefer';
+}
+
+// Init
+document.getElementById('darkSwitch').checked=isDark;
+document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+const aBtn=document.getElementById('btn-'+currentLang); if(aBtn) aBtn.classList.add('active');
+applyTheme(); applyLangLabels();
+
+function toggleDark(){ isDark=document.getElementById('darkSwitch').checked; applyTheme(); applyLangLabels(); saveSettings(); }
+function setLang(lang){ currentLang=lang; document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active')); document.getElementById('btn-'+lang).classList.add('active'); applyLangLabels(); saveSettings(); }
+
+// ══ OFFERS — COUNTDOWN ══
+let offerTimer = null;
+function updateOffer(){
+  const now=new Date(), h=now.getHours(), m=now.getMinutes(), s=now.getSeconds();
+  const isActive=h===23;
+  const card=document.getElementById('offerCard'), badge=document.getElementById('offerBadge'),
+        dot=document.getElementById('badgeDot'), btxt=document.getElementById('badgeText'),
+        sbox=document.getElementById('statusBox'), stitle=document.getElementById('statusTitle'),
+        ssub=document.getElementById('statusSub'),
+        bH=document.getElementById('boxH'),bM=document.getElementById('boxM'),bS=document.getElementById('boxS'),
+        nH=document.getElementById('numH'),nM=document.getElementById('numM'),nS=document.getElementById('numS');
+  if(!card) return;
+  if(isActive){
+    card.className='offer-card active-offer'; badge.className='offer-badge'; dot.className='badge-dot'; btxt.textContent='Live Now';
+    sbox.className='status-box active-box'; stitle.className='green'; stitle.textContent='🟢 Offer is LIVE!'; ssub.textContent='Order now and get 30% off everything';
+    const sl=(59-m)*60+(59-s), rM=Math.floor(sl/60), rS=sl%60;
+    nH.textContent='00'; nM.textContent=String(rM).padStart(2,'0'); nS.textContent=String(rS).padStart(2,'0');
+    bH.className=bM.className=bS.className='time-box green-box';
+  } else {
+    card.className='offer-card inactive-offer'; badge.className='offer-badge inactive-badge'; dot.className='badge-dot off'; btxt.textContent='Starts at 11 PM';
+    sbox.className='status-box inactive-box'; stitle.className='muted'; stitle.textContent='⏳ Offer starts at 11:00 PM';
+    const target=new Date(now); target.setHours(23,0,0,0); if(now>=target) target.setDate(target.getDate()+1);
+    const diff=Math.floor((target-now)/1000), dH=Math.floor(diff/3600), dM=Math.floor((diff%3600)/60), dS=diff%60;
+    nH.textContent=String(dH).padStart(2,'0'); nM.textContent=String(dM).padStart(2,'0'); nS.textContent=String(dS).padStart(2,'0');
+    ssub.textContent=`Offer starts in ${String(dH).padStart(2,'0')}h ${String(dM).padStart(2,'0')}m`;
+    bH.className=bM.className=bS.className='time-box';
+  }
+}
+
+</script>
+</body>
+</html>
